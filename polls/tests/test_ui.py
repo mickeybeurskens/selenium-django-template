@@ -1,5 +1,6 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.firefox.options import Options
 
 
 class UITests(StaticLiveServerTestCase):
@@ -9,7 +10,9 @@ class UITests(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.selenium = WebDriver()
+        options = Options()
+        options.headless = True
+        cls.selenium = WebDriver(options=options)
         cls.selenium.implicitly_wait(10)
 
     @classmethod
@@ -17,7 +20,7 @@ class UITests(StaticLiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
-    def test_poll_link(self):
+    def test_poll_links(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/polls/'))
-        links = self.selenium.find_elements(by='name', value='li')
-        print(links)
+        links = self.selenium.find_elements(by='tag name', value='li')
+        self.assertEqual(len(links), 2)
