@@ -4,7 +4,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 
 class UITests(StaticLiveServerTestCase):
     selenium = None
-    fixtures = []
+    fixtures = ['questions.json']
 
     @classmethod
     def setUpClass(cls):
@@ -18,4 +18,6 @@ class UITests(StaticLiveServerTestCase):
         super().tearDownClass()
 
     def test_poll_link(self):
-        pass
+        self.selenium.get('%s%s' % (self.live_server_url, '/polls/'))
+        links = self.selenium.find_elements(by='name', value='li')
+        print(links)
